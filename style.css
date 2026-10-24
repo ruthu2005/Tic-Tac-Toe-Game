@@ -1,0 +1,64 @@
+
+/* Style the entire webpage */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    text-align: center;
+    margin: 0;
+    padding: 30px 15px;
+}
+
+/* Style the game heading */
+h1 {
+    color: #243b53;
+    font-size: 36px;
+}
+
+/* Style the turn message */
+#status {
+    font-size: 20px;
+    color: #334e68;
+    margin-bottom: 20px;
+}
+
+/* Arrange the nine squares in a grid */
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 90px);
+    gap: 8px;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+/* Style each square */
+.cell {
+    width: 90px;
+    height: 90px;
+    font-size: 36px;
+    font-weight: bold;
+    background-color: white;
+    border: 2px solid #627d98;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Change a square's colour when the mouse is over it */
+.cell:hover {
+    background-color: #d9eafd;
+}
+
+/* Style the restart button */
+#restart {
+    font-size: 16px;
+    padding: 12px 24px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Change the restart button's colour on hover */
+#restart:hover {
+    background-color: #1d4ed8;
+}
