@@ -62,3 +62,80 @@ h1 {
 #restart:hover {
     background-color: #1d4ed8;
 }
+
+/* Scoreboard layout */
+.scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px auto;
+    max-width: 400px;
+}
+
+.score-card {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    border-radius: 12px;
+    background: #f0f4ff;
+    border: 2px solid #d6defa;
+}
+
+.score-card h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    color: #333;
+}
+
+.score-card p {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+    color: #4b5de8;
+}
+
+/* Winning cell animation */
+.cell.winner {
+    background: #b8f7c5;
+    color: #08752b;
+    border-color: #16a34a;
+    animation: winnerPulse 0.7s ease-in-out infinite alternate;
+}
+
+@keyframes winnerPulse {
+    from {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(22, 163, 74, 0);
+    }
+
+    to {
+        transform: scale(1.08);
+        box-shadow: 0 0 18px rgba(22, 163, 74, 0.65);
+    }
+}
+
+/* Mobile-friendly scoreboard */
+@media (max-width: 400px) {
+    .scoreboard {
+        gap: 8px;
+    }
+
+    .score-card {
+        padding: 10px 5px;
+    }
+
+    .score-card h3 {
+        font-size: 13px;
+    }
+
+    .score-card p {
+        font-size: 24px;
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .cell.winner {
+        animation: none;
+    }
+}
