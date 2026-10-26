@@ -139,3 +139,40 @@ h1 {
         animation: none;
     }
 }
+
+/* Game mode selector */
+.game-mode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px auto;
+}
+
+.game-mode label {
+    font-weight: bold;
+}
+
+.game-mode select {
+    padding: 10px 14px;
+    border: 2px solid #d6defa;
+    border-radius: 8px;
+    background: white;
+    color: #333;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.game-mode select:focus {
+    outline: 2px solid #4b5de8;
+    outline-offset: 2px;
+}
+
+.cell {
+    cursor: pointer;
+}
+
+.cell:disabled {
+    cursor: not-allowed;
+}

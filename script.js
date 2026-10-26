@@ -4,13 +4,15 @@ const cells = document.querySelectorAll(".cell");
 const statusText = document.querySelector("#status");
 const restartButton = document.querySelector("#restart");
 
-// Scoreboard elements
 const scoreXText = document.querySelector("#scoreX");
 const scoreOText = document.querySelector("#scoreO");
 const scoreDrawText = document.querySelector("#scoreDraw");
 
+const gameModeSelect = document.querySelector("#gameMode");
+
 let currentPlayer = "X";
 let gameActive = true;
+let computerThinking = false;
 
 let scoreX = 0;
 let scoreO = 0;
@@ -27,41 +29,120 @@ const winningCombinations = [
     [2, 4, 6]
 ];
 
+function updateScoreboard() {
+    scoreXText.textContent = scoreX;
+    scoreOText.textContent = scoreO;
+    scoreDrawText.textContent = scoreDraw;
+}
+
 function handleCellClick(event) {
     const clickedCell = event.currentTarget;
 
-    if (clickedCell.textContent !== "" || !gameActive) {
+    if (
+        !gameActive ||
+        computerThinking ||
+        clickedCell.textContent !== ""
+    ) {
         return;
     }
 
-    clickedCell.textContent = currentPlayer;
+    // In computer mode, the human always plays X.
+    if (
+        gameModeSelect.value === "computer" &&
+        currentPlayer !== "X"
+    ) {
+        return;
+    }
+
+    makeMove(clickedCell);
+
+    if (!gameActive) {
+        return;
+    }
+
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+
+    if (gameModeSelect.value === "computer") {
+        computerThinking = true;
+        statusText.textContent = "Computer is thinking...";
+
+        // Short delay so the computer's move feels natural.
+        setTimeout(() => {
+            if (!gameActive) {
+                computerThinking = false;
+                return;
+            }
+
+            computerMove();
+
+            computerThinking = false;
+
+            if (gameActive) {
+                currentPlayer = "X";
+                statusText.textContent = "Your turn (Player X)";
+            }
+        }, 500);
+    } else {
+        statusText.textContent = `Player ${currentPlayer}'s turn`;
+    }
+}
+
+function makeMove(cell) {
+    cell.textContent = currentPlayer;
 
     if (checkWinner()) {
         gameActive = false;
 
         if (currentPlayer === "X") {
             scoreX++;
-            scoreXText.textContent = scoreX;
         } else {
             scoreO++;
-            scoreOText.textContent = scoreO;
         }
 
-        statusText.textContent = `🎉 Player ${currentPlayer} wins!`;
+        updateScoreboard();
+
+        if (
+            gameModeSelect.value === "computer" &&
+            currentPlayer === "X"
+        ) {
+            statusText.textContent = "🎉 You win!";
+        } else if (
+            gameModeSelect.value === "computer" &&
+            currentPlayer === "O"
+        ) {
+            statusText.textContent = "🤖 Computer wins!";
+        } else {
+            statusText.textContent =
+                `🎉 Player ${currentPlayer} wins!`;
+        }
+
         return;
     }
 
-    // Check for a draw
     if ([...cells].every(cell => cell.textContent !== "")) {
         gameActive = false;
         scoreDraw++;
-        scoreDrawText.textContent = scoreDraw;
+        updateScoreboard();
         statusText.textContent = "🤝 It's a draw!";
+    }
+}
+
+function computerMove() {
+    // Find all empty cells.
+    const emptyCells = [...cells].filter(
+        cell => cell.textContent === ""
+    );
+
+    if (emptyCells.length === 0 || !gameActive) {
         return;
     }
 
-    currentPlayer = currentPlayer === "X" ? "O" : "X";
-    statusText.textContent = `Player ${currentPlayer}'s turn`;
+    // Choose a random empty cell.
+    const randomIndex = Math.floor(
+        Math.random() * emptyCells.length
+    );
+
+    makeMove(emptyCells[randomIndex]);
 }
 
 function checkWinner() {
@@ -73,7 +154,6 @@ function checkWinner() {
             cells[a].textContent === cells[b].textContent &&
             cells[b].textContent === cells[c].textContent
         ) {
-            // Highlight and animate the winning cells
             combination.forEach(index => {
                 cells[index].classList.add("winner");
             });
@@ -93,7 +173,17 @@ function restartGame() {
 
     currentPlayer = "X";
     gameActive = true;
-    statusText.textContent = "Player X's turn";
+    computerThinking = false;
+
+    if (gameModeSelect.value === "computer") {
+        statusText.textContent = "Your turn (Player X)";
+    } else {
+        statusText.textContent = "Player X's turn";
+    }
+}
+
+function changeGameMode() {
+    restartGame();
 }
 
 cells.forEach(cell => {
@@ -101,3 +191,7 @@ cells.forEach(cell => {
 });
 
 restartButton.addEventListener("click", restartGame);
+
+gameModeSelect.addEventListener("change", changeGameMode);
+
+updateScoreboard();
